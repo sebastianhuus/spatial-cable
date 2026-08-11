@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Intentionally no com.apple.security.app-sandbox key: Core Audio process taps
+         are unreliable inside the App Sandbox, so this app runs unsandboxed for the MVP. -->
+</dict>
+</plist>

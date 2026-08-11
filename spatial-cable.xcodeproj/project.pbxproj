@@ -1,0 +1,369 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		07FA076E7070CD640C47D2D3 /* SystemOutputDeviceSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5031C43D86F0145406C92FF9 /* SystemOutputDeviceSwitcher.swift */; };
+		0AA54077709476DA26512602 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2282CB211C3622F5E3B01C13 /* Logging.swift */; };
+		228657E59D16DE4DAA98BF86 /* AudioRelayEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F3AAA2065406EFCFBBF56E /* AudioRelayEngine.swift */; };
+		3DB0CF84DD7B184F7A115132 /* MenuBarContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468E05C28C43CA0EF8EA99DD /* MenuBarContentView.swift */; };
+		63721ADE0FF4A4A328631BA8 /* AudioOutputDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = D228C15B4458732E953067F5 /* AudioOutputDevice.swift */; };
+		72E96AEECEB615B11DF5B570 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0A6674F3CBC73446ADE959 /* AppDelegate.swift */; };
+		A3B869760C305ED01884E9E5 /* AudioObjectID+Properties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C51F3703ECF56999B38233E /* AudioObjectID+Properties.swift */; };
+		AA14272301F52A93453A9802 /* AudioTapManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5478FDA066CD11EDCB1D6715 /* AudioTapManager.swift */; };
+		E307A2DDF6ECCF748FD70864 /* DeviceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E12A44E6FFB289C27CEAB3 /* DeviceStore.swift */; };
+		F4E81F28557ED99401C148C1 /* AudioProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = A244ACE53F083E1BEE155E0E /* AudioProcess.swift */; };
+		FCDE88F35BB5C7E42A1103CD /* spatial-cableApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7336FDDE72A2EDD50F36CAD /* spatial-cableApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0D3953500DE748C2ED830251 /* spatial-cable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "spatial-cable.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		21E12A44E6FFB289C27CEAB3 /* DeviceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceStore.swift; sourceTree = "<group>"; };
+		2282CB211C3622F5E3B01C13 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
+		468E05C28C43CA0EF8EA99DD /* MenuBarContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarContentView.swift; sourceTree = "<group>"; };
+		5031C43D86F0145406C92FF9 /* SystemOutputDeviceSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemOutputDeviceSwitcher.swift; sourceTree = "<group>"; };
+		5478FDA066CD11EDCB1D6715 /* AudioTapManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioTapManager.swift; sourceTree = "<group>"; };
+		5D0A6674F3CBC73446ADE959 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		6C51F3703ECF56999B38233E /* AudioObjectID+Properties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AudioObjectID+Properties.swift"; sourceTree = "<group>"; };
+		A244ACE53F083E1BEE155E0E /* AudioProcess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioProcess.swift; sourceTree = "<group>"; };
+		A5F3AAA2065406EFCFBBF56E /* AudioRelayEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRelayEngine.swift; sourceTree = "<group>"; };
+		C7336FDDE72A2EDD50F36CAD /* spatial-cableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "spatial-cableApp.swift"; sourceTree = "<group>"; };
+		D228C15B4458732E953067F5 /* AudioOutputDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioOutputDevice.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		22A6CCE6DD6B73066EBE885B /* CoreAudio */ = {
+			isa = PBXGroup;
+			children = (
+				6C51F3703ECF56999B38233E /* AudioObjectID+Properties.swift */,
+				D228C15B4458732E953067F5 /* AudioOutputDevice.swift */,
+				A244ACE53F083E1BEE155E0E /* AudioProcess.swift */,
+				5478FDA066CD11EDCB1D6715 /* AudioTapManager.swift */,
+				5031C43D86F0145406C92FF9 /* SystemOutputDeviceSwitcher.swift */,
+			);
+			path = CoreAudio;
+			sourceTree = "<group>";
+		};
+		9154346DD22D4A119B6A8DF2 = {
+			isa = PBXGroup;
+			children = (
+				939998F6BE78E4B8FD7FBD50 /* spatial-cable */,
+				F34C5EB2DB2FAEFCF2EBDEE4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		939998F6BE78E4B8FD7FBD50 /* spatial-cable */ = {
+			isa = PBXGroup;
+			children = (
+				5D0A6674F3CBC73446ADE959 /* AppDelegate.swift */,
+				2282CB211C3622F5E3B01C13 /* Logging.swift */,
+				C7336FDDE72A2EDD50F36CAD /* spatial-cableApp.swift */,
+				22A6CCE6DD6B73066EBE885B /* CoreAudio */,
+				F47289E89B77687A9D114646 /* Menu */,
+				D77356FCAC029E72AC1EDBC7 /* Persistence */,
+				F6B1F51E1320A0978F8E4680 /* Relay */,
+			);
+			path = "spatial-cable";
+			sourceTree = "<group>";
+		};
+		D77356FCAC029E72AC1EDBC7 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				21E12A44E6FFB289C27CEAB3 /* DeviceStore.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		F34C5EB2DB2FAEFCF2EBDEE4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0D3953500DE748C2ED830251 /* spatial-cable.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F47289E89B77687A9D114646 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				468E05C28C43CA0EF8EA99DD /* MenuBarContentView.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		F6B1F51E1320A0978F8E4680 /* Relay */ = {
+			isa = PBXGroup;
+			children = (
+				A5F3AAA2065406EFCFBBF56E /* AudioRelayEngine.swift */,
+			);
+			path = Relay;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BE0A7247CF029D26C8E047F3 /* spatial-cable */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D28FE2AC8F3A9C11730C0F8C /* Build configuration list for PBXNativeTarget "spatial-cable" */;
+			buildPhases = (
+				74CAFE1AF73D4905354A58BE /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "spatial-cable";
+			packageProductDependencies = (
+			);
+			productName = "spatial-cable";
+			productReference = 0D3953500DE748C2ED830251 /* spatial-cable.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3981187D19F1FC650C2F10B7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					BE0A7247CF029D26C8E047F3 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 22162F6963F7C9494ABC1524 /* Build configuration list for PBXProject "spatial-cable" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 9154346DD22D4A119B6A8DF2;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = F34C5EB2DB2FAEFCF2EBDEE4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BE0A7247CF029D26C8E047F3 /* spatial-cable */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		74CAFE1AF73D4905354A58BE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				72E96AEECEB615B11DF5B570 /* AppDelegate.swift in Sources */,
+				A3B869760C305ED01884E9E5 /* AudioObjectID+Properties.swift in Sources */,
+				63721ADE0FF4A4A328631BA8 /* AudioOutputDevice.swift in Sources */,
+				F4E81F28557ED99401C148C1 /* AudioProcess.swift in Sources */,
+				228657E59D16DE4DAA98BF86 /* AudioRelayEngine.swift in Sources */,
+				AA14272301F52A93453A9802 /* AudioTapManager.swift in Sources */,
+				E307A2DDF6ECCF748FD70864 /* DeviceStore.swift in Sources */,
+				0AA54077709476DA26512602 /* Logging.swift in Sources */,
+				3DB0CF84DD7B184F7A115132 /* MenuBarContentView.swift in Sources */,
+				07FA076E7070CD640C47D2D3 /* SystemOutputDeviceSwitcher.swift in Sources */,
+				FCDE88F35BB5C7E42A1103CD /* spatial-cableApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		11452E450B31444189E0FF61 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		5B831A42F059A0E020C01433 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		AF10CA572977A64C591DD187 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "spatial-cable/spatial-cable.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "spatial-cable/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.4;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sebastianhuus.spatial-cable";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E162263B93ECD9B486DCE124 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "spatial-cable/spatial-cable.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "spatial-cable/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.4;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sebastianhuus.spatial-cable";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		22162F6963F7C9494ABC1524 /* Build configuration list for PBXProject "spatial-cable" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				11452E450B31444189E0FF61 /* Debug */,
+				5B831A42F059A0E020C01433 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D28FE2AC8F3A9C11730C0F8C /* Build configuration list for PBXNativeTarget "spatial-cable" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AF10CA572977A64C591DD187 /* Debug */,
+				E162263B93ECD9B486DCE124 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3981187D19F1FC650C2F10B7 /* Project object */;
+}

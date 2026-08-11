@@ -1,0 +1,31 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "/Users/sebastian.huus/dev/spatial-cable/.claude/skills/spox/check-chain.sh",
+            "timeout": 5,
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(spox check *)",
+      "Bash(spox list)",
+      "Bash(spox list -c)",
+      "Bash(spox list --criteria)",
+      "Bash(spox view *)",
+      "Bash(spox view -c *)",
+      "Bash(spox view --criteria *)",
+      "Bash(spox check * all)",
+      "Bash(spox status * *)",
+      "Bash(spox init)",
+      "Bash(spox skill install)"
+    ]
+  }
+}
