@@ -7,6 +7,12 @@ import Foundation
 /// an IOProc. Only one tap is ever active at a time for the MVP — selecting a new target
 /// tears down and recreates.
 final class AudioTapManager: ObservableObject {
+    /// What a tap should capture: one specific process's audio, or the entire system mix.
+    enum TapTarget {
+        case process(AudioObjectID)
+        case allSystemAudio
+    }
+
     @Published private(set) var isRunning = false
     @Published private(set) var lastError: String?
 
@@ -22,12 +28,28 @@ final class AudioTapManager: ObservableObject {
     private var deviceProcID: AudioDeviceIOProcID?
     private var buffersReceived = 0
 
-    func start(targetProcessID: AudioObjectID) {
+    func start(target: TapTarget) {
         stop()
-        Log.tap.info("start: targetProcessID=\(targetProcessID, privacy: .public)")
 
         do {
-            let tapDescription = CATapDescription(stereoMixdownOfProcesses: [targetProcessID])
+            let tapDescription: CATapDescription
+            let targetLabel: String
+            switch target {
+            case .process(let processID):
+                Log.tap.info("start: target=process processID=\(processID, privacy: .public)")
+                tapDescription = CATapDescription(stereoMixdownOfProcesses: [processID])
+                targetLabel = "\(processID)"
+            case .allSystemAudio:
+                let ownProcessID = try AudioObjectID.resolveOwnProcessObjectID()
+                if let ownProcessID {
+                    Log.tap.info("start: target=allSystemAudio excludingOwnProcessID=\(ownProcessID, privacy: .public)")
+                } else {
+                    Log.tap.error("start: target=allSystemAudio could not resolve own process object ID — global tap won't exclude self, feedback risk")
+                }
+                let excluded = ownProcessID.map { [$0] } ?? []
+                tapDescription = CATapDescription(stereoGlobalTapButExcludeProcesses: excluded)
+                targetLabel = "all"
+            }
             tapDescription.uuid = UUID()
             // Without this, the source app keeps playing out its own path *and* we relay a
             // second copy — the user hears everything twice, out of phase.
@@ -54,7 +76,7 @@ final class AudioTapManager: ObservableObject {
             Log.tap.info("Aggregate anchor device (kAudioHardwarePropertyDefaultSystemOutputDevice): id=\(defaultOutputID, privacy: .public) uid=\(outputUID, privacy: .public)")
 
             let aggregateDescription: [String: Any] = [
-                kAudioAggregateDeviceNameKey: "spatial-cable-tap-\(targetProcessID)",
+                kAudioAggregateDeviceNameKey: "spatial-cable-tap-\(targetLabel)",
                 kAudioAggregateDeviceUIDKey: UUID().uuidString,
                 kAudioAggregateDeviceMainSubDeviceKey: outputUID,
                 kAudioAggregateDeviceIsPrivateKey: true,
@@ -105,7 +127,7 @@ final class AudioTapManager: ObservableObject {
 
             isRunning = true
             lastError = nil
-            Log.tap.info("Tap running for targetProcessID=\(targetProcessID, privacy: .public)")
+            Log.tap.info("Tap running for target=\(targetLabel, privacy: .public)")
         } catch {
             lastError = String(describing: error)
             Log.tap.error("start failed: \(String(describing: error), privacy: .public)")

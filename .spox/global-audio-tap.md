@@ -1,4 +1,4 @@
-status: draft
+status: completed
 date: 2026-08-11
 tagline: Tap all system audio at once instead of one selected process, so everything gets spatialized
 
@@ -10,11 +10,11 @@ Right now spatial-cable taps and relays exactly one selected process's audio at 
 
 ## Acceptance criteria
 
-- [ ] A new "All System Audio" option is selectable as the relay source in the menu bar, alongside the existing per-process picker (not a replacement for it)
-- [ ] With "All System Audio" selected and relaying active, audio from two or more simultaneously-playing apps (e.g. Spotify + a Safari tab) is all audible and spatialized on the target output device at once
-- [ ] Starting/stopping relay repeatedly in "All System Audio" mode produces no feedback loop, echo, or runaway audio — spatial-cable's own relayed output must not be picked back up by its own tap
-- [ ] Switching between "All System Audio" mode and a specific single-process selection works cleanly in both directions without requiring an app restart
-- [ ] The existing single-process tap mode continues to work exactly as it does today (no regression)
+- [x] A new "All System Audio" option is selectable as the relay source in the menu bar, alongside the existing per-process picker (not a replacement for it)
+- [x] With "All System Audio" selected and relaying active, audio from two or more simultaneously-playing apps (e.g. Spotify + a Safari tab) is all audible and spatialized on the target output device at once
+- [x] Starting/stopping relay repeatedly in "All System Audio" mode produces no feedback loop, echo, or runaway audio — spatial-cable's own relayed output must not be picked back up by its own tap
+- [x] Switching between "All System Audio" mode and a specific single-process selection works cleanly in both directions without requiring an app restart
+- [x] The existing single-process tap mode continues to work exactly as it does today (no regression)
 
 ## Notes
 

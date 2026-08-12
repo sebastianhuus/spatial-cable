@@ -43,6 +43,20 @@ extension AudioObjectID {
         )
     }
 
+    /// Resolves spatial-cable's own Core Audio process object, so a global tap can exclude it —
+    /// without this, our own relayed output (itself a process on the Mac) would get captured by
+    /// the same tap and feed back into itself.
+    static func resolveOwnProcessObjectID() throws -> AudioObjectID? {
+        let ownPID = ProcessInfo.processInfo.processIdentifier
+        let objectIDs = try readProcessList()
+        for objectID in objectIDs {
+            if let pid = try? objectID.readProcessPID(), pid == ownPID {
+                return objectID
+            }
+        }
+        return nil
+    }
+
     static func readDefaultSystemOutputDevice() throws -> AudioObjectID {
         try AudioObjectID.system.read(
             address: AudioObjectPropertyAddress(

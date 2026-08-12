@@ -12,7 +12,15 @@ struct MenuBarContentView: View {
 
             Divider()
 
-            Menu("Source: \(appDelegate.selectedProcess?.name ?? "None")") {
+            Menu("Source: \(sourceLabel)") {
+                Button {
+                    appDelegate.selectAllSystemAudio()
+                } label: {
+                    checkmarkLabel("All System Audio", isSelected: appDelegate.relaySource == .allSystemAudio)
+                }
+
+                Divider()
+
                 if processController.processes.isEmpty {
                     Text("No audio-capable processes found")
                 }
@@ -20,7 +28,7 @@ struct MenuBarContentView: View {
                     Button {
                         appDelegate.selectProcess(process)
                     } label: {
-                        checkmarkLabel(process.name, isSelected: process.id == appDelegate.selectedProcess?.id)
+                        checkmarkLabel(process.name, isSelected: appDelegate.relaySource == .process(process))
                     }
                 }
             }
@@ -43,7 +51,7 @@ struct MenuBarContentView: View {
             Button(appDelegate.isRelaying ? "Stop Relaying" : "Start Relaying") {
                 appDelegate.toggleRelay()
             }
-            .disabled(appDelegate.selectedProcess == nil || appDelegate.selectedOutputDevice == nil)
+            .disabled(appDelegate.relaySource == nil || appDelegate.selectedOutputDevice == nil)
 
             Button("Refresh Devices") {
                 appDelegate.refreshOutputDevices()
@@ -58,6 +66,17 @@ struct MenuBarContentView: View {
         }
         .padding(10)
         .frame(width: 260)
+    }
+
+    private var sourceLabel: String {
+        switch appDelegate.relaySource {
+        case .process(let process):
+            return process.name
+        case .allSystemAudio:
+            return "All System Audio"
+        case nil:
+            return "None"
+        }
     }
 
     /// Menu items rendered via SwiftUI's `Menu`/`Button` don't get the native checkmark

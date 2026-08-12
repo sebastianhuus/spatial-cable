@@ -6,6 +6,14 @@ import CoreAudio
 /// Lives for the app's whole lifetime (unlike SwiftUI views), which is what Core Audio
 /// device/tap handles need.
 final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
+    /// What's currently selected as the relay source — either one specific process, or the
+    /// whole system mix. Only one is ever active at a time, matching the "only one tap active"
+    /// constraint `AudioTapManager` already enforces.
+    enum RelaySource: Equatable {
+        case process(AudioProcess)
+        case allSystemAudio
+    }
+
     let processController = AudioProcessController()
     let tapManager = AudioTapManager()
     let relayEngine = AudioRelayEngine()
@@ -15,7 +23,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     let outputSwitcher = SystemOutputDeviceSwitcher()
 
     @Published private(set) var outputDevices: [AudioOutputDevice] = []
-    @Published private(set) var selectedProcess: AudioProcess?
+    @Published private(set) var relaySource: RelaySource?
     @Published private(set) var selectedOutputDevice: AudioOutputDevice?
     @Published private(set) var isRelaying = false
     @Published private(set) var statusText = "Idle"
@@ -43,14 +51,29 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         if let uid = DeviceStore.shared.lastOutputDeviceUID {
             selectedOutputDevice = outputDevices.first { $0.uid == uid } ?? selectedOutputDevice
         }
-        if let bundleID = DeviceStore.shared.lastTargetBundleID {
-            selectedProcess = processController.processes.first { $0.bundleID == bundleID }
+        switch DeviceStore.shared.relaySourceMode {
+        case .allSystemAudio:
+            relaySource = .allSystemAudio
+        case .process, nil:
+            if let bundleID = DeviceStore.shared.lastTargetBundleID,
+               let process = processController.processes.first(where: { $0.bundleID == bundleID }) {
+                relaySource = .process(process)
+            }
         }
     }
 
     func selectProcess(_ process: AudioProcess) {
-        selectedProcess = process
+        relaySource = .process(process)
         DeviceStore.shared.lastTargetBundleID = process.bundleID
+        DeviceStore.shared.relaySourceMode = .process
+        if isRelaying {
+            startRelay()
+        }
+    }
+
+    func selectAllSystemAudio() {
+        relaySource = .allSystemAudio
+        DeviceStore.shared.relaySourceMode = .allSystemAudio
         if isRelaying {
             startRelay()
         }
@@ -73,17 +96,29 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     }
 
     private func startRelay() {
-        guard let process = selectedProcess, let device = selectedOutputDevice else {
+        guard let source = relaySource, let device = selectedOutputDevice else {
             statusText = "Pick a source and an output device first"
             return
         }
-        Log.app.info("startRelay: process=\(process.name, privacy: .public) (pid=\(process.pid, privacy: .public)) -> device=\(device.name, privacy: .public) (uid=\(device.uid, privacy: .public))")
+
+        let tapTarget: AudioTapManager.TapTarget
+        let sourceLabel: String
+        switch source {
+        case .process(let process):
+            tapTarget = .process(process.id)
+            sourceLabel = process.name
+            Log.app.info("startRelay: process=\(process.name, privacy: .public) (pid=\(process.pid, privacy: .public)) -> device=\(device.name, privacy: .public) (uid=\(device.uid, privacy: .public))")
+        case .allSystemAudio:
+            tapTarget = .allSystemAudio
+            sourceLabel = "All System Audio"
+            Log.app.info("startRelay: allSystemAudio -> device=\(device.name, privacy: .public) (uid=\(device.uid, privacy: .public))")
+        }
 
         tapManager.onAudioBuffer = { [weak self] buffer in
             self?.relayEngine.enqueue(buffer)
         }
 
-        tapManager.start(targetProcessID: process.id)
+        tapManager.start(target: tapTarget)
 
         guard tapManager.isRunning, let format = tapManager.currentFormat else {
             statusText = tapManager.lastError ?? "Failed to start tap"
@@ -95,7 +130,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
         isRelaying = relayEngine.isRunning
         if isRelaying {
-            statusText = "Relaying \(process.name) → \(device.name)"
+            statusText = "Relaying \(sourceLabel) → \(device.name)"
             Log.app.info("Relay started successfully: \(self.statusText, privacy: .public)")
         } else {
             statusText = relayEngine.lastError ?? "Failed to start relay"
