@@ -1,5 +1,6 @@
 import AppKit
 import AVFoundation
+import Combine
 import CoreAudio
 
 /// Owns every long-lived Core Audio object and wires the tap → relay pipeline together.
@@ -17,10 +18,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     let processController = AudioProcessController()
     let tapManager = AudioTapManager()
     let relayEngine = AudioRelayEngine()
+    let deviceWatcher = AudioDeviceWatcher()
     // No longer used now that AudioRelayEngine targets a device directly via
     // AVSampleBufferAudioRenderer.audioOutputDeviceUniqueID — kept as a fallback in case
     // that turns out to be insufficient and default-output hijacking is needed again.
     let outputSwitcher = SystemOutputDeviceSwitcher()
+
+    private var deviceWatcherCancellable: AnyCancellable?
 
     @Published private(set) var outputDevices: [AudioOutputDevice] = []
     @Published private(set) var relaySource: RelaySource?
@@ -32,6 +36,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         NSApp.setActivationPolicy(.accessory)
         refreshOutputDevices()
         restoreSelection()
+        if selectedOutputDevice == nil {
+            selectedOutputDevice = outputDevices.first
+        }
+        deviceWatcherCancellable = deviceWatcher.$devices
+            .dropFirst() // initial value came from deviceWatcher's own init; refreshOutputDevices() above already covered it
+            .sink { [weak self] devices in
+                self?.reconcileOutputDevices(devices)
+            }
     }
 
     func applicationWillTerminate(_ notification: Notification) {
@@ -40,11 +52,33 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         }
     }
 
+    /// Manually re-triggers the device watcher and reconciles — the "Refresh Devices" button's
+    /// entry point, and also called once on launch. Hotplug events reconcile automatically via
+    /// deviceWatcherCancellable; this exists as an explicit fallback/no-op if detection is current.
     func refreshOutputDevices() {
-        outputDevices = DeviceEnumerator.listPhysicalOutputDevices()
-        if selectedOutputDevice == nil {
-            selectedOutputDevice = outputDevices.first
+        deviceWatcher.refresh()
+        reconcileOutputDevices(deviceWatcher.devices)
+    }
+
+    /// Applies a freshly-known device list: publishes it, and if the currently selected device is
+    /// no longer present, clears the selection (stopping the relay first if it was active). Never
+    /// auto-picks a replacement — matches the app's rule of never silently redirecting audio to a
+    /// device the user didn't explicitly choose. A replugged device just reappears in the list;
+    /// re-selecting it is always an explicit user action.
+    private func reconcileOutputDevices(_ devices: [AudioOutputDevice]) {
+        outputDevices = devices
+
+        guard let selected = selectedOutputDevice,
+              !devices.contains(where: { $0.uid == selected.uid }) else {
+            return
         }
+
+        Log.devices.info("Selected output device disconnected: \(selected.name, privacy: .public)")
+        if isRelaying {
+            stopRelay()
+            statusText = "Stopped — \(selected.name) disconnected"
+        }
+        selectedOutputDevice = nil
     }
 
     private func restoreSelection() {

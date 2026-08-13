@@ -157,6 +157,36 @@ extension AudioObjectID {
         return status == noErr && dataSize > 0
     }
 
+    /// Registers `handler` to be called whenever the property at `address` changes, delivered on
+    /// `queue`. Returns the same block reference passed in — `AudioObjectRemovePropertyListenerBlock`
+    /// requires the identical block back to deregister, so callers must hold onto this return value.
+    func addPropertyListener(
+        address: AudioObjectPropertyAddress,
+        queue: DispatchQueue?,
+        handler: @escaping AudioObjectPropertyListenerBlock
+    ) throws -> AudioObjectPropertyListenerBlock {
+        var mutableAddress = address
+        let status = AudioObjectAddPropertyListenerBlock(self, &mutableAddress, queue, handler)
+        guard status == noErr else {
+            throw CoreAudioError.osStatus(status, "AudioObjectAddPropertyListenerBlock")
+        }
+        return handler
+    }
+
+    /// Deregisters a listener previously registered with `addPropertyListener`. `handler` must be
+    /// the exact block reference returned from that call.
+    func removePropertyListener(
+        address: AudioObjectPropertyAddress,
+        queue: DispatchQueue?,
+        handler: @escaping AudioObjectPropertyListenerBlock
+    ) throws {
+        var mutableAddress = address
+        let status = AudioObjectRemovePropertyListenerBlock(self, &mutableAddress, queue, handler)
+        guard status == noErr else {
+            throw CoreAudioError.osStatus(status, "AudioObjectRemovePropertyListenerBlock")
+        }
+    }
+
     func readTapFormat() throws -> AudioStreamBasicDescription {
         try read(
             address: AudioObjectPropertyAddress(

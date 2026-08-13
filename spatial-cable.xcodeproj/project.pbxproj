@@ -18,9 +18,11 @@
 		E307A2DDF6ECCF748FD70864 /* DeviceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E12A44E6FFB289C27CEAB3 /* DeviceStore.swift */; };
 		F4E81F28557ED99401C148C1 /* AudioProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = A244ACE53F083E1BEE155E0E /* AudioProcess.swift */; };
 		FCDE88F35BB5C7E42A1103CD /* spatial-cableApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7336FDDE72A2EDD50F36CAD /* spatial-cableApp.swift */; };
+		FEF58E307E7BD027049F29B6 /* AudioDeviceWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09B6EA37A5268591B42BF827 /* AudioDeviceWatcher.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		09B6EA37A5268591B42BF827 /* AudioDeviceWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDeviceWatcher.swift; sourceTree = "<group>"; };
 		0D3953500DE748C2ED830251 /* spatial-cable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "spatial-cable.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		21E12A44E6FFB289C27CEAB3 /* DeviceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceStore.swift; sourceTree = "<group>"; };
 		2282CB211C3622F5E3B01C13 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
@@ -39,6 +41,7 @@
 		22A6CCE6DD6B73066EBE885B /* CoreAudio */ = {
 			isa = PBXGroup;
 			children = (
+				09B6EA37A5268591B42BF827 /* AudioDeviceWatcher.swift */,
 				6C51F3703ECF56999B38233E /* AudioObjectID+Properties.swift */,
 				D228C15B4458732E953067F5 /* AudioOutputDevice.swift */,
 				A244ACE53F083E1BEE155E0E /* AudioProcess.swift */,
@@ -161,6 +164,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				72E96AEECEB615B11DF5B570 /* AppDelegate.swift in Sources */,
+				FEF58E307E7BD027049F29B6 /* AudioDeviceWatcher.swift in Sources */,
 				A3B869760C305ED01884E9E5 /* AudioObjectID+Properties.swift in Sources */,
 				63721ADE0FF4A4A328631BA8 /* AudioOutputDevice.swift in Sources */,
 				F4E81F28557ED99401C148C1 /* AudioProcess.swift in Sources */,

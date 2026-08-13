@@ -41,7 +41,7 @@ struct MenuBarContentView: View {
                     Button {
                         appDelegate.selectOutputDevice(device)
                     } label: {
-                        checkmarkLabel(device.name, isSelected: device.id == appDelegate.selectedOutputDevice?.id)
+                        checkmarkLabel(device.name, isSelected: device.uid == appDelegate.selectedOutputDevice?.uid)
                     }
                 }
             }

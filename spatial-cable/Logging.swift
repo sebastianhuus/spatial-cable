@@ -16,4 +16,5 @@ enum Log {
     static let tap = Logger(subsystem: subsystem, category: "Tap")
     static let relay = Logger(subsystem: subsystem, category: "Relay")
     static let outputSwitcher = Logger(subsystem: subsystem, category: "OutputSwitcher")
+    static let devices = Logger(subsystem: subsystem, category: "Devices")
 }
