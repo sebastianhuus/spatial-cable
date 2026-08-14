@@ -1,0 +1,40 @@
+status: discarded
+date: 2026-08-13
+tagline: Mask the mode-switch stall by timing, not by fighting the renderer's volume — both iterations tried, neither shipped, session paused
+
+# duck-on-flush
+
+## Intent
+
+Second attempt at fixing the audible pitch-bend/warble on Spatial Audio mode switches (Fixed/Head-Tracked/Off in Control Center) — see `.spox/tap-clock-decoupling.md` for the first attempt (anchor the tap's aggregate device to a different clock) and why it was discarded (traded the transient stall for a worse, persistent per-mode detune from cross-clock-domain drift compensation).
+
+Root cause (confirmed via instrumentation, unchanged since the first attempt, and independently corroborated — see below): a Spatial Audio mode toggle makes Apple's own `BTAudioHALPlugin` tear down and rebuild the AirPods' internal Spatial Audio Queue — a real `StopIO`/`StartIO` cycle on the physical device that the tap's capture path (`AudioTapManager`'s IOProc) measurably stalls through (96–320ms of lost buffers) at the same moment `AudioRelayEngine`'s renderer gets `AVSampleBufferAudioRendererWasFlushedAutomaticallyNotification`. That stall can't be prevented — it's Apple's own driver.
+
+**External validation**: this isn't unique to spatial-cable's tap architecture. [IINA issue #4920](https://github.com/iina/iina/issues/4920) reports the identical symptom (audio skips on Spatial Audio toggle) via the identical notification, with *no* capture/tap pipeline involved at all — just local video playback through `AVSampleBufferAudioRenderer`. QuickTime Player (presumably `AVPlayer`-based) doesn't exhibit it, which is plausibly why this was never noticed on native apps — the affected surface is the raw `AVSampleBufferAudioRenderer` API itself, not "third-party app" vs. "native app."
+
+**Iteration 1 (abandoned)**: mute the fresh renderer via `.volume = 0` immediately on recreate, hold ~0.5s, ramp back up over ~240ms. Logs showed this engaging with correct timing margins against the measured capture stall, yet the bend was still reported (unsure if better or worse). [mpv issue #15014](https://github.com/mpv-player/mpv/issues/15014) — same `ao_avfoundation` renderer family — independently reports `.volume` mutations taking up to ~1s to actually apply, which would explain the inconsistent result: our mute/ramp had no reliable relationship to when the volume change actually landed in the audio HAL.
+
+**Iteration 2 (current)**: don't touch `.volume` at all. A renderer not attached to `synchronizer` can't produce audible output, so `recreateRenderer()` now creates the fresh renderer but deliberately defers `synchronizer.addRenderer(...)` for `deferredAttachDelay` (0.5s), during which `enqueue()` drops incoming buffers rather than queuing them into an unattached renderer. `performDeferredAttach()` then attaches it, at which point normal buffer flow (already re-anchored via `needsAnchor`) resumes live. This sidesteps the volume-latency uncertainty entirely instead of trying to out-guess it.
+
+## Acceptance criteria
+
+- [ ] Repeating the mode-toggle repro (relay running, toggle Fixed/Head-Tracked/Off a few times) — the raw stutter/glitch is no longer audible; a brief, clean silence is an acceptable replacement, an audible click or stepped jump at the attach boundary is not
+- [ ] No new persistent/sustained detune is introduced — listen across all three modes (Fixed, Head-Tracked, Off) over sustained playback, not just briefly after one toggle, since the previous (discarded) attempt's regression only showed up this way
+- [ ] Two mode-switches in quick succession (~1s apart, as seen in the original repro) don't produce a broken or stuck-silent state — **failed**: iteration 2 did exactly this (see postmortem)
+- [ ] Existing single-process tap mode and "All System Audio" mode both continue to work with no regression — not reached; discarded before this was checked
+
+## Postmortem — why this was discarded, and the session paused here
+
+**Iteration 1** (`.volume`-based mute/ramp): engaged with correct timing per logs, but the user still heard the bend and couldn't say if it was better or worse. Killed by external evidence (mpv#15014) that `.volume` on this renderer family can take up to ~1s to actually apply, making the whole approach's timing assumptions unreliable regardless of how correct our own constants looked.
+
+**Iteration 2** (deferred `synchronizer.addRenderer` attach, no `.volume` involved): user report — "I managed to kill playback by turning it off." Toggling Spatial Audio to Off left the relay in a state where playback did not resume, a more severe regression than either the original bug or iteration 1. Most likely mechanism (not yet confirmed with logs — session ended here): Off mode may not reliably produce another `AVSampleBufferAudioRendererWasFlushedAutomaticallyNotification`/`...OutputConfigurationDidChangeNotification` to trigger a further `recreateRenderer()`, so if `performDeferredAttach()` didn't fire for some reason (e.g. `deferredAttachGeneration` mismatch from an overlapping recreate, or the notification sequence around Off differs from Fixed/Head-Tracked in a way that leaves `rendererIsAttached` stuck `false`), there's no second event to recover from it — unlike the original code, which always re-attached synchronously within the same call. This is notably similar in shape to the original, already-fixed "Off mode goes permanently silent" bug from the project's early hurdle list (see main memory file) — iteration 2 plausibly reintroduced a version of that same failure class by adding a time gap between recreate and attach where none existed before.
+
+**All experimental code has been reverted.** `AudioRelayEngine.swift`, `AudioTapManager.swift`, `AudioObjectID+Properties.swift`, `Logging.swift`, and `project.pbxproj` are back to their pre-investigation state (commit `d7a860a`) via `git checkout`, confirmed by a clean rebuild. `SampleRateProbe.swift` (diagnostic instrumentation from earlier in the investigation) was deleted. The relay is back to the original `recreateRenderer()` behavior: renderer is recreated and re-attached synchronously, no muting, no deferred attach — the original transient bend is present again, but so is the original (better-understood, more battle-tested) recovery guarantee.
+
+## Notes for whoever picks this up next
+
+- Root cause is solid and unlikely to need re-litigating: `BTAudioHALPlugin` tears down/rebuilds the AirPods' Spatial Audio Queue on mode switch (confirmed via `coreaudiod` logs), the tap's capture stalls 96–320ms in step with it, and this is a known limitation shared with other `AVSampleBufferAudioRenderer` consumers ([IINA #4920](https://github.com/iina/iina/issues/4920), [mpv #15014](https://github.com/mpv-player/mpv/issues/15014)) — not something spatial-cable's own architecture is uniquely responsible for.
+- Two approaches tried and discarded: clock-domain decoupling (`.spox/tap-clock-decoupling.md` — introduced a worse, persistent detune) and this one, both iterations (volume-mute — unreliable per external evidence; deferred-attach — introduced a playback-killing regression on Off).
+- Before trying a third approach, **first reproduce the Off-mode killed-playback bug with logging in place** and get an actual log trace of what happens (or doesn't) around that Off transition — iteration 2 was reverted before this was captured, so it's a real gap, not a resolved mystery.
+- Given no known upstream fix exists for `AVSampleBufferAudioRendererWasFlushedAutomaticallyNotification` recovery (per mpv/IINA's own unresolved threads), it may be worth explicitly deciding whether "reduce" is an acceptable bar rather than continuing to chase "eliminate" — and saying so to the user plainly rather than iterating further without that check-in.
+- Diagnostic instrumentation (`SampleRateProbe.swift`, buffer-arrival-gap logging in `AudioTapManager`'s IOProc) was useful and cheap to rebuild if needed again — see git history in this conversation's memory notes for the exact shape, since the files themselves were deleted on revert.
