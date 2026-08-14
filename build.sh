@@ -38,5 +38,16 @@ rm -rf "$BUILD_DIR/spatial-cable.app"
 cp -R "$APP_PATH" "$BUILD_DIR/spatial-cable.app"
 
 echo "==> Done: $BUILD_DIR/spatial-cable.app"
-echo "Run it with:"
-echo "  open \"$BUILD_DIR/spatial-cable.app\""
+
+echo "==> Building install DMG…"
+DMG_PATH="$BUILD_DIR/spatial-cable.dmg"
+STAGING_DIR="$BUILD_DIR/dmg-staging"
+rm -rf "$STAGING_DIR" "$DMG_PATH"
+mkdir -p "$STAGING_DIR"
+cp -R "$BUILD_DIR/spatial-cable.app" "$STAGING_DIR/"
+ln -s /Applications "$STAGING_DIR/Applications"
+hdiutil create -volname "spatial-cable" -srcfolder "$STAGING_DIR" -ov -format UDZO "$DMG_PATH" >/dev/null
+rm -rf "$STAGING_DIR"
+
+echo "==> Opening $DMG_PATH…"
+open "$DMG_PATH"
