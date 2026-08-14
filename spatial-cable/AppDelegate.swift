@@ -180,4 +180,38 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         isRelaying = false
         statusText = "Idle"
     }
+
+    /// Resets this app's own System Audio Recording TCC grant so macOS prompts fresh on next
+    /// launch. Needed because that grant is keyed to the app's code-signing identity — anything
+    /// that changes it (a `DEVELOPMENT_TEAM` change, a cert renewal, switching between ad-hoc
+    /// `build.sh` builds and Xcode Debug builds) can leave a grant that's stale for the *current*
+    /// binary. System Settings still shows the toggle as "on" in that case, and
+    /// `AudioHardwareCreateProcessTap` doesn't error either — it succeeds and delivers a full
+    /// stream of correctly-timed but silent buffers, with no error surfaced anywhere in the stack.
+    /// Scoped to this app's own bundle ID only — doesn't touch any other app's grants.
+    func resetAudioPermission() {
+        if isRelaying {
+            stopRelay()
+        }
+
+        let bundleID = Bundle.main.bundleIdentifier ?? "com.sebastianhuus.spatial-cable"
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/tccutil")
+        process.arguments = ["reset", "ScreenCapture", bundleID]
+
+        do {
+            try process.run()
+            process.waitUntilExit()
+            if process.terminationStatus == 0 {
+                statusText = "Audio permission reset — quit and reopen spatial-cable to re-grant"
+                Log.app.info("Reset ScreenCapture TCC grant for \(bundleID, privacy: .public)")
+            } else {
+                statusText = "Failed to reset audio permission (tccutil exit \(process.terminationStatus))"
+                Log.app.error("tccutil reset exited with status \(process.terminationStatus, privacy: .public)")
+            }
+        } catch {
+            statusText = "Failed to reset audio permission: \(error.localizedDescription)"
+            Log.app.error("tccutil reset failed: \(error.localizedDescription, privacy: .public)")
+        }
+    }
 }

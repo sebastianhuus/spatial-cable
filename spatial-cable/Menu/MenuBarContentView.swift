@@ -58,6 +58,11 @@ struct MenuBarContentView: View {
                 processController.refresh()
             }
 
+            Button("Reset Audio Permission…") {
+                appDelegate.resetAudioPermission()
+            }
+            .help("Fixes silent relays after a code-signing change (e.g. a new build) leaves the System Audio Recording grant stale. Resets just this app's permission — you'll need to quit and reopen to re-grant it.")
+
             Divider()
 
             Button("Quit spatial-cable") {
