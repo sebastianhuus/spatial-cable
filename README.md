@@ -1,5 +1,7 @@
 # spatial-cable
 
+![alt text](readme-image.png)
+
 Menu bar app that relays system/app audio through Core Audio process taps to trigger native macOS spatialization.
 
 ## Build
