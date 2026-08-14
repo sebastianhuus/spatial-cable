@@ -6,7 +6,12 @@ Menu bar app that relays system/app audio through Core Audio process taps to tri
 
 ## Build
 
+**Running with XCode**
+
 Open `spatial-cable.xcodeproj` in Xcode, set your own Team under Signing & Capabilities, then ⌘R.
+
+**Build app from source**
+Run ./build.sh and drag the app to Applications
 
 ## Known Issues
 
