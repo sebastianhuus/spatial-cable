@@ -49,5 +49,5 @@ ln -s /Applications "$STAGING_DIR/Applications"
 hdiutil create -volname "spatial-cable" -srcfolder "$STAGING_DIR" -ov -format UDZO "$DMG_PATH" >/dev/null
 rm -rf "$STAGING_DIR"
 
-echo "==> Opening $DMG_PATH…"
+echo "==> Opening ${DMG_PATH}…"
 open "$DMG_PATH"
