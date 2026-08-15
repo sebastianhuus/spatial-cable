@@ -3,7 +3,8 @@ import Foundation
 
 /// A real, physical (or otherwise non-virtual) output device — what populates the output
 /// picker. Deliberately excludes aggregate/virtual transports so the relay can never target
-/// its own tap plumbing or another app's virtual cable.
+/// its own tap plumbing or another app's virtual cable, and excludes the built-in speakers
+/// as a known-incompatible spatial audio target.
 struct AudioOutputDevice: Identifiable, Hashable {
     let id: AudioObjectID
     let uid: String
@@ -19,7 +20,8 @@ enum DeviceEnumerator {
             guard deviceID.hasOutputStreams() else { continue }
             guard let transportType = try? deviceID.readTransportType() else { continue }
             guard transportType != kAudioDeviceTransportTypeAggregate,
-                  transportType != kAudioDeviceTransportTypeVirtual else { continue }
+                  transportType != kAudioDeviceTransportTypeVirtual,
+                  transportType != kAudioDeviceTransportTypeBuiltIn else { continue }
             guard let uid = try? deviceID.readDeviceUID(),
                   let name = try? deviceID.readDeviceName() else { continue }
 
