@@ -2,7 +2,7 @@
 
 ![alt text](readme-image.png)
 
-Menu bar app that relays system/app audio through Core Audio process taps to trigger native macOS spatialization.
+Menu bar app that relays system/app audio through Core Audio process taps to trigger native macOS spatialization. Allows the use of Spatial Audio features in Fixed or Head Tracking mode with select apps or all apps on your Mac. Works with Chrome or Spotify which run on Chromium and do not yet support the Spatial Audio stack.
 
 ## Build
 
